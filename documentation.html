@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerGate | Engineering Master Thesis & Implementation Protocol</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,200..900;1,200..900&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --secondary: #4338CA;
+            --accent: #E11D48;
+            --bg: #F8FAFC;
+            --surface: #FFFFFF;
+            --ink: #0F172A;
+            --line: #E2E8F0;
+            --muted: #64748B;
+            --font-serif: "Crimson Pro", serif;
+            --font-sans: "Space Grotesk", sans-serif;
+            --font-mono: "JetBrains Mono", monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: var(--ink); font-family: var(--font-sans); line-height: 1.8; transition: background 0.5s; scroll-behavior: smooth; }
+        
+        header { 
+            height: 100vh; display: flex; align-items: center; justify-content: center; 
+            border-bottom: 2px solid var(--ink); position: relative; overflow: hidden;
+            background: radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.15) 0%, transparent 40%);
+        }
+
+        .hero-content { text-align: center; max-width: 1200px; z-index: 2; padding: 3rem; }
+        .hero-tag { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.8rem; color: var(--primary); text-transform: uppercase; margin-bottom: 3rem; display: block; opacity: 0.7; }
+        h1 { font-family: var(--font-serif); font-style: italic; font-size: clamp(4rem, 18vw, 10rem); font-weight: 900; line-height: 0.7; margin-bottom: 4rem; letter-spacing: -0.07em; }
+        .hero-meta { display: flex; justify-content: center; flex-wrap: wrap; gap: 5rem; font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; opacity: 0.4; }
+        .hero-meta b { color: var(--primary); }
+
+        .container { max-width: 1700px; margin: 0 auto; padding: 12rem 3rem; display: grid; grid-template-columns: 1fr; gap: 12rem; }
+        @media (min-width: 1300px) { .container { grid-template-columns: 420px 1fr; } }
+
+        aside { position: sticky; top: 4rem; height: fit-content; padding-right: 4rem; border-right: 2px solid var(--line); }
+        .nav-title { font-family: var(--font-serif); font-style: italic; font-size: 2rem; margin-bottom: 4rem; font-weight: 900; border-bottom: 8px solid var(--primary); display: inline-block; padding-bottom: 0.5rem; }
+        .nav-link { display: block; padding: 1.5rem 0; text-decoration: none; color: var(--ink); font-size: 0.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.25rem; opacity: 0.3; transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .nav-link:hover, .nav-link.active { opacity: 1; color: var(--primary); padding-left: 1.5rem; border-left: 4px solid var(--primary); }
+
+        section { margin-bottom: 25rem; scroll-margin-top: 8rem; }
+        .section-tag { font-size: 0.75rem; font-weight: 900; letter-spacing: 0.5rem; color: var(--primary); text-transform: uppercase; margin-bottom: 3rem; display: block; }
+        h2 { font-family: var(--font-serif); font-style: italic; font-size: 6rem; margin-bottom: 6rem; line-height: 0.75; letter-spacing: -0.05em; }
+        h2 b { color: var(--primary); font-style: normal; font-weight: 900; }
+        h3 { font-size: 1.8rem; margin: 8rem 0 3.5rem; text-transform: uppercase; letter-spacing: 0.2rem; color: var(--primary); font-weight: 900; border-bottom: 1px solid var(--line); padding-bottom: 1rem; }
+        p { font-size: 1.4rem; margin-bottom: 3rem; opacity: 0.8; max-width: 1000px; font-weight: 400; }
+
+        .status-box { background: rgba(79, 70, 229, 0.05); border: 2px solid var(--primary); border-radius: 2rem; padding: 3rem; margin: 4rem 0; }
+        .status-box h4 { font-family: var(--font-mono); font-size: 0.9rem; text-transform: uppercase; margin-bottom: 1rem; color: var(--primary); }
+        .status-box p { font-size: 1.1rem; opacity: 0.7; margin: 0; }
+
+        /* ─── Implementation Grid ─── */
+        .logic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 4rem; margin: 6rem 0; }
+        .logic-card { background: var(--surface); border: 1.5px solid var(--line); border-radius: 4rem; padding: 5rem; transition: 0.7s; overflow: hidden; }
+        .logic-card:hover { border-color: var(--primary); transform: translateY(-15px); box-shadow: 0 50px 100px rgba(0,0,0,0.2); }
+        .logic-card .code-path { font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary); margin-bottom: 2rem; display: block; letter-spacing: 0.1rem; }
+        .logic-card h4 { font-family: var(--font-serif); font-style: italic; font-size: 2.5rem; margin-bottom: 2rem; }
+        .logic-card p { font-size: 1.1rem; opacity: 0.5; margin-bottom: 3rem; }
+        .logic-card .spec-list { list-style: none; }
+        .logic-card .spec-list li { font-family: var(--font-mono); font-size: 0.7rem; color: var(-- muted); padding: 0.5rem 0; border-top: 1px solid var(--line); text-transform: uppercase; }
+
+        /* ─── Master Persona Guide ─── */
+        .persona-hub { margin: 8rem 0; background: var(--surface); border: 3px solid var(--ink); border-radius: 5rem; padding: 7rem; position: relative; perspective: 2000px; }
+        .persona-label { position: absolute; top: -2.5rem; left: 6rem; background: var(--ink); color: white; padding: 0.75rem 3rem; border-radius: 3rem; font-family: var(--font-mono); font-size: 1rem; font-weight: 900; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 5rem; margin-top: 5rem; }
+        .feature-cell h5 { font-family: var(--font-serif); font-style: italic; font-size: 2.2rem; margin-bottom: 1.5rem; }
+        .feature-cell p { font-size: 1.05rem; opacity: 0.4; }
+        .feature-cell .trigger { font-family: var(--font-mono); font-size: 0.7rem; color: var(--primary); font-weight: 800; border: 1px solid var(--primary); padding: 0.5rem 1rem; border-radius: 0.5rem; display: inline-block; margin-top: 2rem; }
+
+        /* ─── Integration Protocol ─── */
+        .system-graph { background: var(--ink); border-radius: 5rem; padding: 8rem; margin: 6rem 0; display: flex; flex-direction: column; gap: 5rem; box-shadow: 0 40px 100px rgba(0,0,0,0.1); }
+        .layer { display: flex; justify-content: space-around; align-items: center; }
+        .nexus { border: 1px solid rgba(255,255,255,0.1); padding: 3rem 4rem; border-radius: 2rem; background: rgba(255,255,255,0.05); text-align: center; width: 350px; }
+        .nexus h6 { font-family: var(--font-serif); font-style: italic; font-size: 1.8rem; color: white; margin-bottom: 0.5rem; }
+        .nexus span { font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary); text-transform: uppercase; letter-spacing: 0.2rem; }
+
+        .tree-container { background: var(--surface); color: var(--muted); padding: 6rem; border-radius: 5rem; font-family: var(--font-mono); font-size: 1.2rem; line-height: 2.5; border: 1px solid var(--line); }
+        .tree-container b { color: var(--ink); font-weight: 900; }
+        .tree-container i { color: var(--primary); font-style: normal; opacity: 0.5; }
+
+        footer { padding: 15rem 5rem; background: var(--ink); color: white; display: flex; justify-content: space-between; align-items: end; }
+        .f-logo { font-family: var(--font-serif); font-style: italic; font-size: 6.5rem; font-weight: 900; line-height: 0.6; }
+        .f-meta { font-family: var(--font-mono); font-size: 0.8rem; opacity: 0.2; text-align: right; line-height: 2.2; max-width: 400px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="hero-content">
+            <span class="hero-tag">System Development Protocol CG-ULTRA-X</span>
+            <h1>CareerGate <br>Engineering <br>Protocol</h1>
+            <div class="hero-meta">
+                <span>Domain: <b>CAREERGATE.SYSTEM</b></span>
+                <span>Version: <b>2.6.0-ULTRA</b></span>
+                <span>Status: <b>ENCRYPTED-NOMINAL</b></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside>
+            <div class="nav-title">Protocol Index</div>
+            <nav>
+                <a href="#mapping" class="nav-link">Structural Registry</a>
+                <a href="#logic-deep-dive" class="nav-link">Logic Implementations</a>
+                <a href="#persona-features" class="nav-link">Feature HUD Matrix</a>
+                <a href="#connectivity" class="nav-link">System Nexus Map</a>
+                <a href="#design-system" class="nav-link">The Visual Protocol</a>
+            </nav>
+        </aside>
+
+        <main>
+            <section id="mapping">
+                <span class="section-tag">01. Structural Registry</span>
+                <h2>Global File <b>Hierarchy</b></h2>
+                <p>Every file in the CareerGate ecosystem is engineered for modularity and high-speed reactivity.</p>
+                <div class="tree-container">
+                    <div>/ <b>src/</b></div>
+                    <div>├── <b>App.tsx</b> <i>// The Master Nexus. Manages global auth state & persistent routing vectors.</i></div>
+                    <div>├── <b>firebase.ts</b> <i>// Cloud Bridge. Centralized SDK configuration for persistent storage.</i></div>
+                    <div>├── <b>index.css</b> <i>// Design Protocol. Directives for the HSL Design System v2.6.</i></div>
+                    <div>├── <span style="opacity: 0.3;">lib/</span></div>
+                    <div>│   ├── <b>gemini.ts</b> <i>// Neural Engine. Orchestrates LLM prompt sequences for Resume NLP.</i></div>
+                    <div>│   └── <b>store.ts</b> <i>// State Matrix. Reactive LocalStorage hub for real-time CRUD.</i></div>
+                    <div>└── <span style="opacity: 0.3;">components/</span></div>
+                    <div>    ├── <b>AdminDashboard.tsx</b> <i>// Overseer Console. Metrics tracking & entity moderation.</i></div>
+                    <div>    ├── <b>EmployerDashboard.tsx</b> <i>// Recruitment Lab. Pipeline Management & Job Factory.</i></div>
+                    <div>    ├── <b>CandidateDashboard.tsx</b> <i>// Talent HUD. Application Flow & Recommendation AI.</i></div>
+                    <div>    ├── <b>ResumeBuilder.tsx</b> <i>// Synthesis Engine. Generates ATS-ready PDF documents.</i></div>
+                    <div>    ├── <b>JobFeed.tsx</b> <i>// Marketplace Accelerator. Real-time searchable job feed.</i></div>
+                    <div>    ├── <b>Subscription.tsx</b> <i>// Revenue Logic. Local payment encryption & simulation.</i></div>
+                    <div>    └── <b>NotificationSystem.tsx</b> <i>// Signal Hub. Real-time alerts for state-changes.</i></div>
+                </div>
+                <div class="status-box">
+                    <h4>Dev Snapshot</h4>
+                    <p>Total Core Units: 14. Architecture: Micro-Frontend Simulation with Centralized State Matrix.</p>
+                </div>
+            </section>
+
+            <section id="logic-deep-dive">
+                <span class="section-tag">02. Technical Implementation</span>
+                <h2>Logic <b>Modules</b></h2>
+                <p>An audit of the specific functions and libraries that power every interactive feature of CareerGate.</p>
+                
+                <div class="logic-grid">
+                    <div class="logic-card">
+                        <span class="code-path">@lib/store.ts / window.dispatchEvent</span>
+                        <h4>Reactivity Engine</h4>
+                        <p>Implements a custom <code>cg_store_update</code> event listener protocol. This enables sibling components to update their UI in real-time when a job is posted or applied to, without requiring a global context refresh.</p>
+                        <ul class="spec-list">
+                            <li>Event: CustomEvent</li>
+                            <li>Latency: < 5ms</li>
+                            <li>Sync: Synchronous UI Update</li>
+                        </ul>
+                    </div>
+
+                    <div class="logic-card">
+                        <span class="code-path">@lib/gemini.ts / generative-ai</span>
+                        <h4>Neural Synthesis</h4>
+                        <p>Communicates directly with <code>gemini-1.5-flash</code> via Google Generative AI SDK. Specific prompts ensure candidate resumes are scored against job descriptions with human-like rationale.</p>
+                        <ul class="spec-list">
+                            <li>Model: Pro 1.5 / Flash</li>
+                            <li>Return: Structured JSON</li>
+                            <li>Task: Resume Scoring / Optimization</li>
+                        </ul>
+                    </div>
+
+                    <div class="logic-card">
+                        <span class="code-path">@components/ResumeBuilder.tsx</span>
+                        <h4>Document Engine</h4>
+                        <p>Utilizes <code>jspdf</code> and <code>html2canvas</code> for document synthesis. Performs dynamic CSS-to-Canvas rasterization for professional resume exports with zero styling loss.</p>
+                        <ul class="spec-list">
+                            <li>PPI: 144 DPI (Digital Master)</li>
+                            <li>Format: ISO 216 (A4 Print)</li>
+                            <li>Lib: Canvas2PDF Architecture</li>
+                        </ul>
+                    </div>
+
+                    <div class="logic-card">
+                        <span class="code-path">@lib/store.ts / setUserPlan</span>
+                        <h4>Monetization Path</h4>
+                        <p>Handles local state transformation for premium user tiers. Encrypts simulated plan ID into LocalStorage to persist account status across sessions.</p>
+                        <ul class="spec-list">
+                            <li>Gateway: Local Payment Sim</li>
+                            <li>Tiers: Basic / Pro / Enterprise</li>
+                            <li>Status: persistent-active</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="persona-features">
+                <span class="section-tag">03. Capability HUD</span>
+                <h2>Detailed <b>Feature</b> Matrix</h2>
+                <p>Specific operational capabilities mapped to the three core system operators.</p>
+
+                <div class="persona-hub">
+                    <div class="persona-label">🛡️ SYSTEM ADMINISTRATOR</div>
+                    <div class="feature-grid">
+                        <div class="feature-cell">
+                            <h5>User Census</h5>
+                            <p>Unified table monitoring all users. Identifies email, role assigned, and account creation timestamp.</p>
+                            <span class="trigger">ADMIN_PANEL_V1</span>
+                        </div>
+                        <div class="feature-cell">
+                            <h5>Metric Intelligence</h5>
+                            <p>Real-time analytics on job volume, application conversion rates, and revenue flow metrics.</p>
+                            <span class="trigger">METRIC_API_LIVE</span>
+                        </div>
+                        <div class="feature-cell">
+                            <h5>listing Audit</h5>
+                            <p>Full moderation control over all posted job opportunities across every employer vector.</p>
+                            <span class="trigger">ENTITY_DELETE_HOOK</span>
+                        </div>
+                        <div class="feature-cell">
+                            <h5>System Integrity</h5>
+                            <p>Manual role-overrides and whitelist management for new company recruiters.</p>
+                            <span class="trigger">ROOT_OVERRIDE_ENABLED</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="persona-hub">
+                    <div class="persona-label">🏢 PROFESSIONAL RECRUITER</div>
+                    <div class="feature-grid">
+                        <div class="feature-cell">
+                            <h5>The Job Factory</h5>
+                            <p>Advanced creation protocol for job postings including metadata for salary, skills, and industry.</p>
+                            <span class="trigger">POST_JOB_CRUD</span>
+                        </div>
+                        <div class="feature-cell">
+                            <h5>ATS Score HUD</h5>
+                            <p>Rank-ordered applicant list highlighting "Match Scores" derived from AI analysis.</p>
+                            <span class="trigger">AI_MATCH_ALGO</span>
+                        </div>
+                        <div class="feature-cell">
+                            <h5>Pipeline Control</h5>
+                            <p>Workflow management for moving talent through the selection funnel (Applied -> Interview -> Acceptance).</p>
+                            <span class="trigger">UPDATE_STATUS_V2</span>
+                        </div>
+                        <div class="feature-cell">
+                            <h5>Recruiter Profile</h5>
+                            <p>Company branding management to attract top-tier AI talent to listings.</p>
+                            <span class="trigger">PROFILE_SYNC</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="persona-hub">
+                    <div class="persona-label">👤 GROWTH CANDIDATE</div>
+                    <div class="feature-grid">
+                        <div class="feature-cell">
+                            <h5>Neural Resume Builder</h5>
+                            <p>Creation system that optimizes resumes for AI scanners using real-time skill-gap suggestions.</p>
+                            <span class="trigger">RESUME_SYNTH_LIVE</span>
+                        </div>
+                        <div class="feature-cell">
+                            <h5>Opportunity Feed</h5>
+                            <p>Searchable job marketplace that filters roles by "AI Match" probability and salary ranges.</p>
+                            <span class="trigger">FEED_ACCELERATOR</span>
+                        </div>
+                        <div class="feature-cell">
+                            <h5>Application Tracker</h5>
+                            <p>Centralized HUD to monitor the real-time status of sent applications across multiple companies.</p>
+                            <span class="trigger">TRACKING_PIPELINE</span>
+                        </div>
+                        <div class="feature-cell">
+                            <h5>Pro-Level Access</h5>
+                            <p>Subscription upgrade portal to unlock enterprise features and priority job matching.</p>
+                            <span class="trigger">STRIPE_LOCAL_EMU</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="connectivity">
+                <span class="section-tag">04. System Topology</span>
+                <h2>The <b>System</b> Nexus Map</h2>
+                <p>Visualizing the data propagation paths from UI trigger to database entry.</p>
+
+                <div class="system-graph">
+                    <div class="layer">
+                        <div class="nexus"><h6>User Interface</h6><span>Navbar.tsx / Hero.tsx</span></div>
+                    </div>
+                    <div class="layer">
+                        <div class="nexus"><h6>Logic Orchestrator</h6><span>App.tsx Routing / Context</span></div>
+                        <div class="nexus"><h6>Neural Logic</h6><span>lib/gemini.ts</span></div>
+                    </div>
+                    <div class="layer">
+                        <div class="nexus"><h6>Reactive Store</h6><span>lib/store.ts</span></div>
+                        <div class="nexus"><h6>Cloud Core</h6><span>firebase.ts</span></div>
+                    </div>
+                    <div class="layer">
+                        <div class="nexus"><h6>PDF Synthesis</h6><span>Canvas Engine</span></div>
+                        <div class="nexus"><h6>Dashboards</h6><span>Role HUDs</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="design-system">
+                <span class="section-tag">05. Design Philosophy</span>
+                <h2>Aesthetic <b>Protocol</b></h2>
+                <div class="logic-grid">
+                    <div class="logic-card">
+                        <span class="code-path">@index.css / glassmorphism</span>
+                        <h4>Layered Depth</h4>
+                        <p>Heavy usage of <code>backdrop-blur-xl</code> gives the system a futuristic "OS" feel that separates information tiers.</p>
+                    </div>
+                    <div class="logic-card">
+                        <span class="code-path">@index.css / animations</span>
+                        <h4>Kinetic Feedback</h4>
+                        <p>Utilizes <code>motion/react</code> (Framer Motion) for spring-physics interactions that react to user intent instantly.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="f-logo">CAREERGATE <br>SYSTEMS</div>
+        <div class="f-meta">
+            ID: STABLE-MASTER-2026<br>
+            VERSION: 2.6.0-ULTRA<br>
+            STATUS: FULLY OPERATIONAL<br>
+            © 2026 CareerGate Engineering Group. All Rights Reserved.
+        </div>
+    </footer>
+
+</body>
+</html>

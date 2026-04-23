@@ -1,0 +1,8 @@
+{
+  "name": "CareerGate",
+  "description": "An AI-powered job portal with intelligent matching, ATS-optimized resumes, and skill assessments.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
